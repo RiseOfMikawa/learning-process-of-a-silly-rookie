@@ -1,0 +1,133 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <malloc.h>
+
+struct SeqStack
+{
+	int MAXNUM;
+	int top;//top of the stack;
+	int* element;
+};
+typedef struct SeqStack* PSeqStack;
+
+PSeqStack createEmptyStack_seq(int m)//to create an empty stack with a sequence_list;
+{
+	PSeqStack pastack = (PSeqStack)malloc(sizeof(struct SeqStack));
+	if (pastack != NULL)
+	{
+		pastack->element = (int*)malloc(sizeof(int) * m);
+		if (pastack->element)
+		{
+			pastack->MAXNUM = m;
+			pastack->top = -1;
+			return pastack;
+		}
+		else
+		{
+			free(pastack);
+		}
+	}
+	else
+	{
+		printf("Out of space! \n");
+		return NULL;
+	}
+}
+
+void isEmptyStack_seq(PSeqStack pastack)//to tell if the stack is empty or not;
+{
+	if (pastack->top == -1)
+	{
+		printf("The stack is empty! \n");
+	}
+	else
+	{
+		printf("The stack is not empty! \n");
+	}
+}
+
+void push_seq(PSeqStack pastack, int x)//to push x into the stack;
+{
+	if (pastack->top >= pastack->MAXNUM - 1)
+	{
+		printf("Overflow! \n ");
+	}
+	else
+	{
+		pastack->top++;//push;
+		pastack->element[pastack->top] = x;
+	}
+}
+
+int pop_seq(PSeqStack pastack)//to pop x out of the stack;
+{
+	int x;
+	if (pastack->top == -1)
+	{
+		printf("The stack is empty! \n");
+		return NULL;
+	}
+	else
+	{
+		x = pastack->element[pastack->top];
+		pastack->top--;//pop out;
+		return x;
+	}
+}
+
+int top_seq(PSeqStack pastack)//to print the top_element without actually popping it out of the stack;
+{
+	if (pastack->top == -1)
+	{
+		printf("The stack is empty! \n");
+		return NULL;
+	}
+	else
+	{
+		return pastack->element[pastack->top];
+	}
+}
+
+void printStack_seq(PSeqStack pastack)//to print all elements without actually popping them out of the stack;
+{
+	int tempTop, tempTopElement;
+	printf("The element(s) in the stack are: (starting from the top) \n");
+	tempTop = pastack->top;//to use 'tempTop' to indicate 'pastack->top',therefore the elements will be printed without being actually popped out;
+	while (tempTop != -1)
+	{
+		tempTopElement = pastack->element[tempTop];
+		tempTop--;
+		printf("%d \n", tempTopElement);
+	}
+	printf("This is the bottom of the stack! \n");
+}
+
+int main()
+{
+	int maxNum, a, popNum;
+	PSeqStack* stack_01;
+	printf("Please input the maxNum! \n");
+	scanf("%d", &maxNum);
+	stack_01 = createEmptyStack_seq(maxNum);
+	printf("Please push %d element(s) into the stack! \n", maxNum);
+	for (int i = 0; i < maxNum ; i++)
+	{
+		scanf("%d", &a);
+		push_seq(stack_01, a);
+		printf("%d has been pushed into the stack! \n", a);
+	}
+	printStack_seq(stack_01);
+	do
+	{
+		printf("How many elements you would like to pop out of the stack? \n");
+		scanf("%d", &popNum);
+	} while (maxNum < popNum);
+	for (int i = 0; i < popNum; i++)
+	{
+		int temp;
+		temp = pop_seq(stack_01);
+		printf("%d has been popped out of the stack! \n", temp);
+	}
+	printStack_seq(stack_01);
+	return 0;
+}
