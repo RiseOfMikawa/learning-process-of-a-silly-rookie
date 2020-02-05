@@ -1,0 +1,139 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <malloc.h>
+
+struct Node;
+typedef struct Node* PNode;
+struct Node
+{
+	int element;
+	PNode next;
+};
+
+struct LinkStack
+{
+	PNode top;
+};
+typedef struct LinkStack* PLinkstack;
+
+PLinkstack createEmptyStack_link(void)//to create an empty stack with link list;
+{
+	PLinkstack plstack;
+	plstack = (PLinkstack)malloc(sizeof(struct LinkStack));
+	if (plstack != NULL)
+	{
+		plstack->top = NULL;
+	}
+	else
+	{
+		printf("Out of space! \n");
+	}
+	return plstack;
+}
+
+void isEmptyStack_link(PLinkstack plstack)//to check if the stack is empty or not;
+{
+	if (plstack->top == NULL)
+	{
+		printf("The stack is empty! \n");
+	}
+	else
+	{
+		printf("The stack is not empty! \n");
+	}
+}
+
+void push_link(PLinkstack plstack, int x)//to push element x into the stack;
+{
+	PNode tempNode;
+	tempNode = (PNode)malloc(sizeof(struct Node));//to apply memery space for element x;
+	if (tempNode == NULL)
+	{
+		printf("Out of space! \n");
+	}
+	else
+	{
+		tempNode->element = x;
+		tempNode->next = plstack->top;
+		plstack->top = tempNode;//element x becomes new top of the stack;
+	}
+}
+
+int pop_link(PLinkstack plstack)//to pop the element at top out of the stack;
+{
+	PNode stackTop;
+	int tempElement;
+	if (plstack->top == NULL)
+	{
+		printf("The stack is empty! \n");
+		return NULL;
+	}
+	else
+	{
+		stackTop = plstack->top;//cannot "free(plstack->top)'',therefore,  use "PNode stackTop" to point to "plstack->top" and then "free(stackTop)";
+		tempElement = stackTop->element;
+		plstack->top = plstack->top->next;//the second_top becomes the new top;
+		free(stackTop);
+		return tempElement;
+	}
+}
+
+void printTop_link(PLinkstack plstack)
+{
+	if (plstack->top == NULL)
+	{
+		printf("The stack is empty! \n");
+	}
+	else
+	{
+		printf("The element at top of the stack is: %d \n", plstack->top->element);
+	}
+}
+
+void printStack_link(PLinkstack plstack)
+{
+	PNode tempPointer;
+	tempPointer = (PNode)malloc(sizeof(struct Node));
+	printf("The elements in the stack are: (starting from the top) \n");
+	tempPointer->next = plstack->top;
+	while (tempPointer->next != NULL)
+	{
+		printf("%d \n", tempPointer->next->element);
+		tempPointer = tempPointer->next;
+	}
+	printf("All elements in the stack have been printed! \n");
+}
+
+int main()
+{
+	PLinkstack stack_02;
+	int numPush, numPop;
+	int a, b;
+	stack_02 = createEmptyStack_link();
+	isEmptyStack_link(stack_02);
+	do
+	{
+		printf("How many elements would you like to push into the stack? \n");
+		scanf("%d", &numPush);
+	} while (numPush <= 0);
+	printf("Please input the %d elements: \n", numPush);
+	for (int i = 0; i <numPush; i++)
+	{
+		scanf("%d", &a);
+		push_link(stack_02, a);
+		printf("%d has been pushed into the stack! \n", a);
+	}
+	printStack_link(stack_02);
+	do
+	{
+		printf("How many elements would you like to pop out of  the stack? \n");
+		scanf("%d", &numPop);
+	} while (numPush < numPop);
+	for (int i = 0; i < numPop; i++)
+	{
+		b = pop_link(stack_02);
+		printf("%d has been popped out of the stack! \n", b);
+	}
+	printStack_link(stack_02);
+	return 0;
+}
